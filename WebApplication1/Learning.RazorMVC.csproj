@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Database.sqlite3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Database.sqlite3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.9" />
