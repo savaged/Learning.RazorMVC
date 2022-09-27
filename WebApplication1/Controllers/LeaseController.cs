@@ -94,7 +94,7 @@ namespace WebApplication1.Controllers
         {
             if (id == null) return NotFound();
             var model = await _modelService.Show<Lease>((int)id);
-            ApplyLeaseeName(model);
+            await ApplyLeaseeName(model);
             return View(model);
         }
 
