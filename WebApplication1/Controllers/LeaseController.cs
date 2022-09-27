@@ -19,6 +19,10 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index()
         {
             var index = await _modelService.Index<Lease>();
+            foreach (var model in index)
+            {
+                await ApplyLeaseeName(model);
+            }
             return View(index);
         }
 
@@ -27,6 +31,7 @@ namespace WebApplication1.Controllers
         {
             if (id == null) return NotFound();
             var model = await _modelService.Show<Lease>((int)id);
+            await ApplyLeaseeName(model);
             return View(model);
         }
 
@@ -59,6 +64,7 @@ namespace WebApplication1.Controllers
         // GET: LeaseController/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            await LoadLeaseeLookup();
             if (id == null) return NotFound();
             var model = await _modelService.Edit<Lease>((int)id);
             return View(model);
@@ -87,8 +93,9 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
-            await _modelService.Destroy<Lease>((int)id);
-            return View();
+            var model = await _modelService.Show<Lease>((int)id);
+            ApplyLeaseeName(model);
+            return View(model);
         }
 
         // POST: LeaseController/Delete/5
@@ -110,6 +117,8 @@ namespace WebApplication1.Controllers
 
         private async Task LoadLeaseeLookup()
         {
+            if (ViewBag.LeaseeLookup != null) return;
+
             var users = await _modelService.Index<User>();
             IEnumerable<SelectListItem> items = users.Select(u => new SelectListItem
             {
@@ -117,6 +126,14 @@ namespace WebApplication1.Controllers
                 Text = u.Fullname
             });
             ViewBag.LeaseeLookup = items;
+        }
+
+        private async Task ApplyLeaseeName(Lease model)
+        {
+            await LoadLeaseeLookup();
+            model.LeaseeName = ((IEnumerable<SelectListItem>)
+                ViewBag.LeaseeLookup).FirstOrDefault(
+                u => u.Value == model.LeaseeId?.ToString())?.Text;
         }
 
     }

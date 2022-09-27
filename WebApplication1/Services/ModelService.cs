@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using System.Data;
+using System.Reflection;
 using System.Text;
 using WebApplication1.Models;
 
@@ -148,7 +150,7 @@ namespace WebApplication1.Services
             IList<string> names = new List<string>();
             foreach (var p in model.GetType().GetProperties())
             {
-                if (excludeId && p.Name == nameof(IModel.Id)) continue;
+                if (p.GetCustomAttribute<ComputedAttribute>() != null) continue;
                 names.Add(p.Name);
             }
             return names;
