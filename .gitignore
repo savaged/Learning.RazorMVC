@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 # Sqlite
 *.sqlite3
+**/*.sqlite3
 
 # JetBrains Rider
 .idea/
